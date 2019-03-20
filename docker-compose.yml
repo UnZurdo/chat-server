@@ -1,0 +1,33 @@
+version: "3"
+services:
+  mapbox-server:
+    build: .
+    command: npm start
+    ports:
+      - "3001:3001"
+    environment:
+      PANEL_PATH: ""
+      PORT: 3001
+    volumes:
+      - .:/usr/src/app
+    networks:
+      internal:
+        aliases:
+          - mapbox
+    depends_on:
+      - tileserver-gl
+    links:
+      - tileserver-gl
+  tileserver-gl:
+    image: "klokantech/tileserver-gl:latest"
+    ports:
+      - "8081:80"
+    networks:
+      internal:
+        aliases:
+          - tileserver-gl
+    volumes:
+      - ./data:/data
+networks:
+  internal:
+    driver: bridge
